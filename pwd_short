@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+PWD=$(pwd)
+maxlen=50
+leftlen=9
+shortened="..."
+
+nPWD=$(pwd)
+if [ ${#nPWD} -gt $maxlen ]; then
+  offset=$(( ${#nPWD} - $maxlen + $leftlen ))
+  nPWD="${nPWD:0:$leftlen}${shortened}${nPWD:$offset:$maxlen}"
+else
+  nPWD=$(pwd)
+fi
+
+echo $nPWD
