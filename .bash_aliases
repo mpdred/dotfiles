@@ -30,6 +30,7 @@ function toolbox() {
     mpdred/toolbox
 }
 
+alias psproc='ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu'
 alias gitlog='watch --color git log --all --decorate --graph --color=always'
 alias k='kubectl'
 source <(kubectl completion bash | sed 's/kubectl/k/g')

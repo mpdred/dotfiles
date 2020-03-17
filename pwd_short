@@ -2,7 +2,7 @@
 
 PWD=$(pwd)
 maxlen=50
-leftlen=9
+leftlen=8
 shortened="..."
 
 nPWD=$(pwd)
