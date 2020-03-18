@@ -1,0 +1,15 @@
+[user]
+  email = 22294277+mpdred@users.noreply.github.com
+  name = "Marius P"
+
+[core]
+  editor = vim
+	excludesfile = /home/marius/.gitignore_global
+
+[merge]
+  tool = vimdiff
+  conflictstyle = diff3
+
+[mergetool]
+  prompt = false
+  trustExitCode = true
