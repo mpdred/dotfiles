@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 PWD=$(pwd)
-maxlen=50
-leftlen=8
-shortened="..."
+maxlen=30
+leftlen=3
+shortened=".."
 
 nPWD=$(pwd)
 if [ ${#nPWD} -gt $maxlen ]; then

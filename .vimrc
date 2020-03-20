@@ -1,4 +1,8 @@
 " == GENERAL ==
+"
+if filereadable(glob("~/.vimrc.local"))
+    source ~/.vimrc.local
+endif
 
 
 " enable filetype plugins
@@ -20,7 +24,7 @@ set wildmenu
 set ruler
 
 " show line numbers
-set number
+"set number
 
 " highlight current line
 "set cursorline
@@ -83,8 +87,8 @@ set expandtab
 "set smarttab
 
 " 1 tab == n spaces
-set shiftwidth=4
-set tabstop=4
+set shiftwidth=2
+set tabstop=2
 
 "set ai " auto indent
 "set si " smart indent

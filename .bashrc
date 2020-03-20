@@ -7,7 +7,7 @@ function nonzero_return() {
 	[ $RETVAL -ne 0 ] && echo "$RETVAL "
 }
 
-export PS1="\`nonzero_return\`$ "
+PS1="\n\s \`nonzero_return\`\$\n"
 
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases

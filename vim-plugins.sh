@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-#rm -rfv ~/.vim ~/.vimrc 2>/dev/null || true
-#git checkout -- .vimrc 2>/dev/null || true
+rm -rfv ~/.vimrc.local ~/.vim 2>/dev/null || true
 
 test -d ~/.vim || mkdir -p ~/.vim/autoload ~/.vim/bundle
 
 # Pathogen.vim
 test -f ~/.vim/autoload/pathogen.vim \
-    || cat >> .vimrc << EOF
+    || cat >> ~/.vimrc.local << EOF
 
 
 " == PLUGINS ==
@@ -34,8 +33,48 @@ ln -sfv $SRC ~/.vim/bundle/$(basename $SRC)
 EOF
 
 
+# ctrlpvim/ctrlp.vim
+test -d ~/.vim/bundle/ctrlp.vim || cat >> ~/.vimrc.local << EOF
+
+
+" = ctrlp.vim =
+"
+" Change the default mapping and the default command to invoke CtrlP
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+
+" When invoked without an explicit starting directory, CtrlP will set its local working directory according to this variable:
+" 'c' - the directory of the current file.
+" 'a' - the directory of the current file, unless it is a subdirectory of the cwd
+" 'r' - the nearest ancestor of the current file that contains one of these directories or files: .git .hg .svn .bzr _darcs
+" 'w' - modifier to "r": start search from the cwd instead of the current file's directory
+" 0 or '' (empty string) - disable this feature.
+let g:ctrlp_working_path_mode = 'ra'
+
+" Ignore files in '.gitignore'
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+
+" Open files in a new tab
+let g:ctrlp_prompt_mappings = {
+  \ 'AcceptSelection("e")': [],
+  \ 'AcceptSelection("t")': ['<cr>', '<c-m>'],
+  \ }
+EOF
+
+test -d ~/.vim/bundle/ctrlp.vim || /bin/bash << 'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+URL=https://github.com/ctrlpvim/ctrlp.vim
+SRC=~/src/github.com/ctrlpvim/ctrlp.vim
+
+test -d $SRC || git clone --depth=1 $URL.git $SRC
+ln -sfv $SRC ~/.vim/bundle/$(basename $SRC)
+EOF
+
+
 # hashivim/vim-terraform
-test -d ~/.vim/bundle/vim-terraform || cat >> .vimrc << EOF
+test -d ~/.vim/bundle/vim-terraform || cat >> ~/.vimrc.local << EOF
 
 
 " = vim-terraform =
@@ -59,7 +98,7 @@ EOF
 
 
 # luochen1990/rainbow
-test -d ~/.vim/bundle/rainbow || cat >> .vimrc << EOF
+test -d ~/.vim/bundle/rainbow || cat >> ~/.vimrc.local << EOF
 
 
 " = rainbow =
@@ -82,7 +121,7 @@ EOF
 
 
 # preservim/nerdcommenter
-test -d ~/.vim/bundle/nerdcommenter || cat >> .vimrc << EOF
+test -d ~/.vim/bundle/nerdcommenter || cat >> ~/.vimrc.local << EOF
 
 " = nerdcommenter =
 "
@@ -127,7 +166,7 @@ EOF
 
 
 # preservim/nerdtree
-test -d ~/.vim/bundle/synstastic || cat >> .vimrc << EOF
+test -d ~/.vim/bundle/synstastic || cat >> ~/.vimrc.local << EOF
 
 " = nerdtree =
 "
@@ -164,7 +203,7 @@ EOF
 
 
 # vim-syntastic/syntastic
-test -d ~/.vim/bundle/synstastic || cat >> .vimrc << EOF
+test -d ~/.vim/bundle/synstastic || cat >> ~/.vimrc.local << EOF
 
 
 " = syntastic =
