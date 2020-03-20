@@ -17,12 +17,12 @@ if [ -f ~/.bash_aliases-sensitive ]; then
     . ~/.bash_aliases-sensitive
 fi
 
-complete -C /usr/local/bin/aws_completer aws
-complete -C $HOME/bin/terraform terraform
-source <(kubectl completion bash)
-source <(helm completion bash)
+complete -C $(which aws_completer) aws || true
+complete -C $(which terraform) terraform || true
+source <(kubectl completion bash) || true
+source <(helm completion bash) || true
+source <(kind completion bash) || true
 #source <(eksctl completion bash)
-#source <(kind completion bash)
 #source <(kubeless completion bash)
 
 
