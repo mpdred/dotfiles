@@ -49,7 +49,7 @@ let g:ctrlp_cmd = 'CtrlP'
 " 'r' - the nearest ancestor of the current file that contains one of these directories or files: .git .hg .svn .bzr _darcs
 " 'w' - modifier to "r": start search from the cwd instead of the current file's directory
 " 0 or '' (empty string) - disable this feature.
-let g:ctrlp_working_path_mode = 'ra'
+let g:ctrlp_working_path_mode = ''
 
 " Ignore files in '.gitignore'
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
@@ -176,15 +176,15 @@ test -d ~/.vim/bundle/synstastic || cat >> ~/.vimrc.local << EOF
 map <C-n> :NERDTreeToggle<CR>
 
 " open a NERDTree automatically when vim starts up if no files were specified
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+"autocmd StdinReadPre * let s:std_in=1
+"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 " open NERDTree automatically when vim starts up on opening a directory
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
+"autocmd StdinReadPre * let s:std_in=1
+"autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
 
 " close vim if the only window left open is a NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " show hidden files
 let NERDTreeShowHidden=1

@@ -1,5 +1,5 @@
 " == GENERAL ==
-"
+
 if filereadable(glob("~/.vimrc.local"))
     source ~/.vimrc.local
 endif
@@ -25,6 +25,9 @@ set ruler
 
 " show line numbers
 "set number
+
+" show character limit
+set colorcolumn=120
 
 " highlight current line
 "set cursorline
@@ -61,7 +64,7 @@ set matchtime=5
 syntax on
 
 "set background=light
-"set background=dark
+set background=dark
 "colorscheme desert
 
 
