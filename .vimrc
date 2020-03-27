@@ -27,7 +27,7 @@ set ruler
 "set number
 
 " show character limit
-set colorcolumn=120
+"set colorcolumn=120
 
 " highlight current line
 "set cursorline
@@ -64,7 +64,7 @@ set matchtime=5
 syntax on
 
 "set background=light
-set background=dark
+"set background=dark
 "colorscheme desert
 
 
