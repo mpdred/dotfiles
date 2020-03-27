@@ -18,6 +18,8 @@ cdf() {
    file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
 }
 alias gitlog='watch --color git log --all --decorate --graph --color=always'
+alias k='kubectl'
+source <(kubectl completion bash | sed 's/kubectl/k/g')
 alias kns='kubectl config set-context --current --namespace'
 alias kget='kubectl get $(kubectl api-resources --verbs=list -o name | paste -sd, -) --ignore-not-found'
 alias psproc='ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu'
