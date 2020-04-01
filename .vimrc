@@ -24,13 +24,13 @@ set wildmenu
 set ruler
 
 " show line numbers
-"set number
+set number
 
 " show character limit
 "set colorcolumn=120
 
 " highlight current line
-"set cursorline
+set cursorline
 
 " show matching brackets when text indicator is over them
 set showmatch
@@ -64,7 +64,7 @@ set matchtime=5
 syntax on
 
 "set background=light
-"set background=dark
+set background=dark
 "colorscheme desert
 
 

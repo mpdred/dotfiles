@@ -27,12 +27,6 @@ export HISTCONTROL=ignoredups:erasedups
 # Don’t save ls, ps and history commands:
 export HISTIGNORE="ls:ps:history:pwd"
 
-function nonzero_return() {
-	RETVAL=$?
-	[ $RETVAL -ne 0 ] && echo "$RETVAL "
-}
-
-PS1="\s \`nonzero_return\`\$ "
 
 if [ -f ~/.bash_aliases ]; then
   . ~/.bash_aliases
@@ -80,3 +74,26 @@ source <(kind completion bash)
 #for filename in $HOME/.kube/*.yaml; do
 #  export KUBECONFIG=$KUBECONFIG:$filename
 #done
+
+COLOR_RED="\033[0;31m"
+COLOR_YELLOW="\033[0;33m"
+COLOR_GREEN="\033[0;32m"
+COLOR_OCHRE="\033[38;5;95m"
+COLOR_BLUE="\033[0;34m"
+COLOR_WHITE="\033[0;37m"
+COLOR_RESET="\033[0m"
+COLOR_BOLD="\033[1m"
+
+function nonzero_return() {
+	RETVAL=$?
+	[ $RETVAL -ne 0 ] \
+    && echo -e "${COLOR_RED}${RETVAL}${COLOR_RESET} "
+}
+
+#PS1="\n\s \D{%Y-%m-%dT%H:%M:%S} \`nonzero_return\` $(git_branch) $(git_color)\n"
+PS1="\[$COLOR_RESET\]\n"
+PS1+="\s "
+PS1+="\`nonzero_return\`"
+PS1+="\D{%Y-%m-%dT%H:%M:%S} "
+PS1+="\[$COLOR_RESET\]\$\n> "   # '#' for root, else '$'
+export PS1
