@@ -24,7 +24,7 @@ set wildmenu
 set ruler
 
 " show line numbers
-set number
+" set number
 
 " show character limit
 "set colorcolumn=120
@@ -64,7 +64,7 @@ set matchtime=5
 syntax on
 
 "set background=light
-set background=dark
+"set background=dark
 "colorscheme desert
 
 

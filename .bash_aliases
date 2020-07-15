@@ -10,6 +10,7 @@ alias awsecr='aws ecr get-login-password | \
 awkn() {
   awk -F ' ' '{print $var}' var="$1"
 }
+alias k='kubectl'
 alias bat='bat -p'
 alias batt='upower -i /org/freedesktop/UPower/devices/battery_BAT0'
 cdf() {
@@ -20,5 +21,6 @@ cdf() {
 alias gitlog='watch --color git log --all --decorate --graph --color=always'
 source <(k completion bash | sed 's/kubectl/k/g')
 alias kns='kubectl config set-context --current --namespace'
+alias less='less -R'
 alias kget='kubectl get $(kubectl api-resources --verbs=list -o name | paste -sd, -) --ignore-not-found'
 alias psproc='ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu'

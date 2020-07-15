@@ -5,7 +5,7 @@
 export SLUGIFY_USES_TEXT_UNIDECODE=yes
 
 # Set history format
-#export HISTTIMEFORMAT="%h %Y/%m/%d %H:%M:%S "
+export HISTTIMEFORMAT="%h %Y/%m/%d %H:%M:%S "
 
 # Increase history size (0 zero disables the history list, value less than zero causes the history list to be unlimited)
 export HISTSIZE=-1
@@ -25,7 +25,7 @@ PROMPT_COMMAND='history -a'
 export HISTCONTROL=ignoredups:erasedups
 
 # Don’t save ls, ps and history commands:
-export HISTIGNORE="ls:ps:history:pwd"
+export HISTIGNORE="ls:ps:history:pwd:cd"
 
 
 if [ -f ~/.bash_aliases ]; then
@@ -46,11 +46,10 @@ fi
 
 export EDITOR=vim
 export VISUAL=vim
-export PATH=$HOME/bin:$PATH
-export GOPATH=$HOME/go
-export GOBIN=/usr/local/go/bin
-export GOROOT=/usr/local/go
-export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
+export PATH=$HOME/.local/bin:$PATH
+export GOBIN=/usr/bin/go
+export GOROOT=/usr/lib/go-1.14
+export PATH=$PATH:$GOPATH/bin
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 if command -v pyenv 1>/dev/null 2>&1; then
@@ -75,6 +74,8 @@ source <(kind completion bash)
 #  export KUBECONFIG=$KUBECONFIG:$filename
 #done
 
+# --------
+
 COLOR_RED="\033[0;31m"
 COLOR_YELLOW="\033[0;33m"
 COLOR_GREEN="\033[0;32m"
@@ -87,13 +88,38 @@ COLOR_BOLD="\033[1m"
 function nonzero_return() {
 	RETVAL=$?
 	[ $RETVAL -ne 0 ] \
-    && echo -e "${COLOR_RED}${RETVAL}${COLOR_RESET} "
+    && echo "$RETVAL "
 }
 
-#PS1="\n\s \D{%Y-%m-%dT%H:%M:%S} \`nonzero_return\` $(git_branch) $(git_color)\n"
-PS1="\[$COLOR_RESET\]\n"
+function timer_start {
+  timer=${timer:-$SECONDS}
+}
+
+function timer_stop {
+  timer_show=$(($SECONDS - $timer))
+  unset timer
+}
+
+trap 'timer_start' DEBUG
+PROMPT_COMMAND=timer_stop
+
+PS1="\[$COLOR_RESET\]"
+PS1+="\n#"
+PS1+="\[$COLOR_BOLD\]"
+
+#PS1+="\D{%H:%M:%S} "
 PS1+="\s "
+PS1+='t=${timer_show}s '
+
+
+PS1+="${COLOR_RED}"
 PS1+="\`nonzero_return\`"
-PS1+="\D{%Y-%m-%dT%H:%M:%S} "
-PS1+="\[$COLOR_RESET\]\$\n> "   # '#' for root, else '$'
+PS1+="${COLOR_RESET}"
+PS1+="\[$COLOR_BOLD\]"
+
+#PS1+='`~/bin/pwd_short` '
+
+PS1+="\$ \n"   # '#' for root, else '$'
+PS1+="\[$COLOR_RESET\]"
+
 export PS1

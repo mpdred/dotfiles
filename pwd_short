@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 PWD=$(pwd)
-maxlen=90
-leftlen=3
+maxlen=35
+leftlen=0
 shortened=".."
 
 nPWD=$(pwd)
