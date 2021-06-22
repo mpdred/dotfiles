@@ -27,7 +27,7 @@ set ruler
 " set number
 
 " show character limit
-"set colorcolumn=120
+" set colorcolumn=120
 
 " highlight current line
 set cursorline
@@ -64,7 +64,7 @@ set matchtime=5
 syntax on
 
 "set background=light
-"set background=dark
+" set background=dark
 "colorscheme desert
 
 
@@ -131,3 +131,12 @@ map <silent> $ g<End>
 "nmap <C-Tab>   :tabnext<CR>
 "nmap <C-t>     :tabnew<CR>
 "nmap <C-w>     :tabclose<CR>
+
+
+
+" Fix the difficult-to-read default setting for diff text highlighting.  The
+" " bang (!) is required since we are overwriting the DiffText setting. The
+" highlighting
+" " for "Todo" also looks nice (yellow) if you don't like the "MatchParen"
+" colors.
+highlight! link DiffText MatchParen

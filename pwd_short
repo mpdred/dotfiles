@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 PWD=$(pwd)
-maxlen=35
+maxlen=40
 leftlen=0
 shortened=".."
 

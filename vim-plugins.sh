@@ -21,16 +21,16 @@ test -f ~/.vim/autoload/pathogen.vim \
 
 
 # airblade/vim-gitgutter
-test -d ~/.vim/bundle/vim-gitgutter || /bin/bash << 'EOF'
-#!/usr/bin/env bash
-set -euo pipefail
-
-URL=https://github.com/airblade/vim-gitgutter
-SRC=~/src/github.com/airblade/vim-gitgutter
-
-test -d $SRC || git clone --depth=1 $URL.git $SRC
-ln -sfv $SRC ~/.vim/bundle/$(basename $SRC)
-EOF
+# test -d ~/.vim/bundle/vim-gitgutter || /bin/bash << 'EOF'
+# #!/usr/bin/env bash
+# set -euo pipefail
+#
+# URL=https://github.com/airblade/vim-gitgutter
+# SRC=~/src/github.com/airblade/vim-gitgutter
+#
+# test -d $SRC || git clone --depth=1 $URL.git $SRC
+# ln -sfv $SRC ~/.vim/bundle/$(basename $SRC)
+# EOF
 
 
 # ctrlpvim/ctrlp.vim

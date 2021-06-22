@@ -18,7 +18,7 @@ cdf() {
    local dir
    file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
 }
-alias gitlog='watch --color git log --all --decorate --graph --color=always'
+alias gitlog='watch --color git log --all --decorate --graph --color=always --date=relative'
 source <(k completion bash | sed 's/kubectl/k/g')
 alias kns='kubectl config set-context --current --namespace'
 alias less='less -R'

@@ -25,7 +25,7 @@ PROMPT_COMMAND='history -a'
 export HISTCONTROL=ignoredups:erasedups
 
 # Don’t save ls, ps and history commands:
-export HISTIGNORE="ls:ps:history:pwd:cd"
+export HISTIGNORE="ls:ps:history:pwd:cd:cat:tree"
 
 
 if [ -f ~/.bash_aliases ]; then
@@ -60,8 +60,8 @@ export DOCKER_BUILDKIT=1
 
 
 # completions
-complete -C $(which aws_completer) aws
-complete -C $(which terraform) terraform
+complete -C "$(which aws_completer)" aws
+complete -C "$(which terraform)" terraform
 source <(kubectl completion bash)
 source <(helm completion bash)
 source <(kind completion bash)
@@ -107,9 +107,9 @@ PS1="\[$COLOR_RESET\]"
 PS1+="\n#"
 PS1+="\[$COLOR_BOLD\]"
 
-#PS1+="\D{%H:%M:%S} "
+PS1+=" \D{%H:%M:%S} "
 PS1+="\s "
-PS1+='t=${timer_show}s '
+PS1+='(T+${timer_show}s) '
 
 
 PS1+="${COLOR_RED}"
@@ -117,9 +117,10 @@ PS1+="\`nonzero_return\`"
 PS1+="${COLOR_RESET}"
 PS1+="\[$COLOR_BOLD\]"
 
-#PS1+='`~/bin/pwd_short` '
-
 PS1+="\$ \n"   # '#' for root, else '$'
 PS1+="\[$COLOR_RESET\]"
 
 export PS1
+
+
+export BAT_THEME=ansi-light
