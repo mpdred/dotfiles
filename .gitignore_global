@@ -1,5 +1,19 @@
+# ide
 .idea/
+*.iml
 
+# build
+*.orig
 *local*
 *.log
+*.bak
 *.tmp
+*.out
+coverage.html
+**/out/**
+
+CHANGELOG.md
+.version*
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate

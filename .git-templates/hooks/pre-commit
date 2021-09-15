@@ -1,0 +1,63 @@
+#!/bin/bash
+set -euo pipefail
+
+GIT_ROOT_DIR="$(git rev-parse --show-toplevel)"
+
+process_go() {
+  ## this will retrieve all of the .go files that have been
+  ## changed since the last commit
+  STAGED_GO_FILES=$(git diff --cached --name-only --diff-filter=ACM -- '*.go')
+  [[ $STAGED_GO_FILES == "" ]] && return 0
+
+
+  set -x
+  which goimports || go get golang.org/x/tools/cmd/goimports
+
+  goimports -e -w "$GIT_ROOT_DIR"
+  go vet -c=5 "$GIT_ROOT_DIR"/...
+
+  go test -coverprofile=coverage.out -covermode=set "$GIT_ROOT_DIR"/...
+
+  go fmt "$GIT_ROOT_DIR"/...
+  set +x
+
+  ## we can check to see if this is empty
+  ## otherwise we can do stuff with these changed go files
+  if [[ $STAGED_GO_FILES != "" ]];
+  then
+    go tool cover -func=coverage.out
+    for file in $STAGED_GO_FILES; do
+        ## add any potential changes from our formatting to the commit
+        git add $file
+    done
+  fi
+}
+
+process_terraform() {
+  ## this will retrieve all of the .go files that have been
+  ## changed since the last commit
+  STAGED_TF_FILES=$(git diff --cached --name-only --diff-filter=ACM -- '*.tf')
+  [[ $STAGED_TF_FILES == "" ]] && return 0
+
+  terraform fmt -recursive
+
+
+  ## we can check to see if this is empty
+  ## otherwise we can do stuff with these changed go files
+  if [[ $STAGED_TF_FILES != "" ]];
+  then
+    for file in $STAGED_TF_FILES; do
+        fileDir=$(dirname $GIT_ROOT_DIR/$file)
+        terraform -chdir=$fileDir init
+        terraform -chdir=$fileDir validate -json
+
+        ## add any potential changes from our formatting to the commit
+        git add $file
+    done
+  fi
+}
+
+test -f "$GIT_ROOT_DIR/go.mod" && process_go
+find "$GIT_ROOT_DIR" -name "*.tf" > /dev/null && process_terraform
+
+exit 0
