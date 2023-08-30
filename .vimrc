@@ -1,4 +1,8 @@
+" Fuzzy FZF
+" set rtp+=/opt/homebrew/opt/fzf
+
 " == GENERAL ==
+
 
 if filereadable(glob("~/.vimrc.local"))
     source ~/.vimrc.local
@@ -140,3 +144,6 @@ map <silent> $ g<End>
 " " for "Todo" also looks nice (yellow) if you don't like the "MatchParen"
 " colors.
 highlight! link DiffText MatchParen
+
+" autocomplete FZF
+set rtp+=/opt/homebrew/opt/fzfk

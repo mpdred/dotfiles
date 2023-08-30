@@ -2,62 +2,137 @@
 set -euo pipefail
 
 GIT_ROOT_DIR="$(git rev-parse --show-toplevel)"
+cd "$GIT_ROOT_DIR"
 
-process_go() {
-  ## this will retrieve all of the .go files that have been
-  ## changed since the last commit
+fmt_go() {
+  ## we only want to process Go files that have been staged
   STAGED_GO_FILES=$(git diff --cached --name-only --diff-filter=ACM -- '*.go')
   [[ $STAGED_GO_FILES == "" ]] && return 0
 
-
-  set -x
-  which goimports || go get golang.org/x/tools/cmd/goimports
-
-  goimports -e -w "$GIT_ROOT_DIR"
-  go vet -c=5 "$GIT_ROOT_DIR"/...
-
-  go test -coverprofile=coverage.out -covermode=set "$GIT_ROOT_DIR"/...
-
-  go fmt "$GIT_ROOT_DIR"/...
-  set +x
-
-  ## we can check to see if this is empty
-  ## otherwise we can do stuff with these changed go files
   if [[ $STAGED_GO_FILES != "" ]];
   then
-    go tool cover -func=coverage.out
+    ## format code
+    go fmt ./...
+
+    ## format and fix code imports
     for file in $STAGED_GO_FILES; do
-        ## add any potential changes from our formatting to the commit
-        git add $file
+        which goimports || go get golang.org/x/tools/cmd/goimports
+        goimports -v -e -w "$file"
     done
+
+    ## add any potential changes from our formatting to the commit
+    for file in $STAGED_GO_FILES; do
+        git add "$file"
+    done
+
+
+    ## lint
+    go vet -c=5 ./...
+
+    ## verify dependencies
+    go mod verify
+
+    ## ensure modules are not missing and that they are up-to-date
+    go mod tidy
+
   fi
+
+  for file in $STAGED_GO_FILES; do
+      git add "$file"
+  done
 }
 
-process_terraform() {
-  ## this will retrieve all of the .go files that have been
-  ## changed since the last commit
+lint_go() {
+  ## we only want to process Go files that have been staged
+  STAGED_GO_FILES=$(git diff --cached --name-only --diff-filter=ACM -- '*.go')
+  [[ $STAGED_GO_FILES == "" ]] && return 0
+
+  golangci-lint run --disable  exhaustruct --verbose --sort-results --print-resources-usage --fix ./...
+  #which golangci-lint || go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+  #golangci-lint run \
+  #  --new \
+  #  --exclude-use-default \
+  #  --disable "exhaustruct,goerr113,lll,varnamelen" \
+  #  --verbose \
+  #  --sort-results \
+  #  --timeout 5m0s \
+  #  --print-resources-usage \
+  #  --max-issues-per-linter 0 \
+  #  --max-same-issues 0 \
+  #  --skip-dirs '.*(generated).*' \
+  #  --fix \
+  #  "$GIT_ROOT_DIR"/...
+    #--enable-all \
+    #--disable "wrapcheck,gofumpt,tagliatelle,exhaustivestruct,exhaustive,ireturn,paralleltest,wsl,errorlint" \
+  ## add any potential changes from our formatting to the commit
+
+  for file in $STAGED_GO_FILES; do
+      git add "$file"
+  done
+}
+
+test_go() {
+  ## we only want to process Go files that have been staged
+  STAGED_GO_FILES=$(git diff --cached --name-only --diff-filter=ACM -- '*.go')
+  [[ $STAGED_GO_FILES == "" ]] && return 0
+
+  ## run the unit tests
+  test -d "$GIT_ROOT_DIR"/cmd/ && go test -coverprofile=coverage.out -covermode=set "$GIT_ROOT_DIR"/cmd/...
+  test -d "$GIT_ROOT_DIR"/internal/ && go test -coverprofile=coverage.out -covermode=set "$GIT_ROOT_DIR"/internal/...
+  test -d "$GIT_ROOT_DIR"/pkg && go test -coverprofile=coverage.out -covermode=set "$GIT_ROOT_DIR"/pkg/...
+  test -f coverage.out && go tool cover -func=coverage.out
+
+  ## add any potential changes from our formatting to the commit
+  for file in $STAGED_GO_FILES; do
+      git add "$file"
+  done
+}
+
+fmt_terraform() {
+  ## we only want to process Terraform files that have been staged
   STAGED_TF_FILES=$(git diff --cached --name-only --diff-filter=ACM -- '*.tf')
   [[ $STAGED_TF_FILES == "" ]] && return 0
 
   terraform fmt -recursive
 
-
-  ## we can check to see if this is empty
-  ## otherwise we can do stuff with these changed go files
   if [[ $STAGED_TF_FILES != "" ]];
   then
     for file in $STAGED_TF_FILES; do
-        fileDir=$(dirname $GIT_ROOT_DIR/$file)
-        terraform -chdir=$fileDir init
-        terraform -chdir=$fileDir validate -json
-
+        ## format
+        terraform fmt "$file"
         ## add any potential changes from our formatting to the commit
-        git add $file
+        git add "$file"
     done
   fi
 }
 
-test -f "$GIT_ROOT_DIR/go.mod" && process_go
-find "$GIT_ROOT_DIR" -name "*.tf" > /dev/null && process_terraform
+test_terraform() {
+  ## we only want to process Terraform files that have been staged
+  STAGED_TF_FILES=$(git diff --cached --name-only --diff-filter=ACM -- '*.tf')
+  [[ $STAGED_TF_FILES == "" ]] && return 0
+
+  terraform fmt -recursive
+
+  if [[ $STAGED_TF_FILES != "" ]];
+  then
+    for file in $STAGED_TF_FILES; do
+        ## validate all files
+        fileDir=$(dirname "$GIT_ROOT_DIR"/"$file")
+        terraform -chdir="$fileDir" init -upgrade
+        terraform -chdir="$fileDir" validate
+
+        ## add any potential changes from our formatting to the commit
+        git add "$file"
+    done
+  fi
+}
+
+test -f "$GIT_ROOT_DIR/go.mod" && fmt_go
+find "$GIT_ROOT_DIR" -name "*.tf" > /dev/null && fmt_terraform
+
+test -f "$GIT_ROOT_DIR/go.mod" && test_go
+#find "$GIT_ROOT_DIR" -name "*.tf" > /dev/null && test_terraform
+
+test -f "$GIT_ROOT_DIR/go.mod" && lint_go
 
 exit 0

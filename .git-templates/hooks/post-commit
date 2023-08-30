@@ -1,14 +1,5 @@
 #!/bin/bash
 set -euo pipefail
 
-GIT_ROOT_DIR="$(git rev-parse --show-toplevel)"
-
-process_go() {
-  golint "$GIT_ROOT_DIR"/... | grep -iv \
-    -e "should have comment or be unexported" \
-    -e "should have comment (or a comment on this block) or be unexported"
-}
-
-test -f "$GIT_ROOT_DIR/go.mod" && process_go
 
 exit 0

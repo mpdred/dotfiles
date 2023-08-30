@@ -108,6 +108,7 @@ main
 
 # Local .terraform directories
 **/.terraform/*
+#.terraform.lock.hcl
 
 # .tfstate files
 *.tfstate
@@ -147,4 +148,14 @@ terraform.rc
 # Misc
 #
 
+.run/
 **/.DS_Store
+
+*.log
+*.out
+*.txt
+*.tmp
+*.bak
+*tmp*
+
+*.patch
